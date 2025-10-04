@@ -1,4 +1,4 @@
-extends Tree
+extends TouchTree
 
 @export var supports_drag : bool = true
 
