@@ -602,7 +602,7 @@ func save() -> bool:
 	return status
 
 func save_as() -> bool:
-	if OS.get_name() == "HTML5":
+	if OS.get_name() == "HTML5" || true:
 		var dialog = preload("res://material_maker/windows/line_dialog/line_dialog.tscn").instantiate()
 		add_child(dialog)
 		var status = await dialog.enter_text("Save", "Select a file name", save_path.get_file() if save_path != null else "")
@@ -628,6 +628,7 @@ func save_as() -> bool:
 	return false
 
 func save_file(filename:String) -> bool:
+	#print("base_dir ", mm_loader.current_project_path)
 	mm_loader.current_project_path = filename.get_base_dir()
 	var data = top_generator.serialize()
 	mm_loader.current_project_path = ""
@@ -635,7 +636,9 @@ func save_file(filename:String) -> bool:
 	if OS.get_name() == "HTML5":
 		JavaScriptBridge.download_buffer(JSON.stringify(data, "\t", true).to_ascii_buffer(), filename)
 	else:
-		var file : FileAccess = FileAccess.open(filename, FileAccess.WRITE)
+		#print("filename: ", filename)
+		var file : FileAccess = FileAccess.open("user://".path_join(filename), FileAccess.WRITE)
+		print( "abs path: ", file.get_path_absolute() )
 		if file != null:
 			file.store_string(JSON.stringify(data, "\t", true))
 			e = file.get_error()
